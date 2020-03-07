@@ -1,0 +1,5 @@
+.vscode
+exercices/simple-emitter/venv/
+__pycache__
+*.pyc
+target
