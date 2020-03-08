@@ -66,8 +66,8 @@ compliquera votre tâche. Pensez à repartitionner les messages vers un topic in
 
   * Grouper par catégorie (seconde partie des URLs en `/store` ) et compter le nombre de visites par catégorie.
   * Joindre les deux topics `visits` et `metrics` pour produire des évènements contenant les informations des deux topics
-    * Ecrire le résultat dans le topic `votre_nom-augmented-metrics`
-  * Calculer la latence moyenne par URL depuis le topic précédent, `votre_nom-augmented-metrics`.
+    * Ecrire le résultat dans le topic `augmented-metrics`
+  * Calculer la latence moyenne par URL depuis le topic précédent, `augmented-metrics`.
 
 ## Interactive Queries
 
