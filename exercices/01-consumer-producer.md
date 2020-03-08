@@ -34,6 +34,15 @@ Ceci va lancer sur votre machine l'ensemble des composants nécessaires, allez e
 
 Pour l'usage de ce TP, vous vous connectez au broker Kafka suivant : `127.0.0.1:9092`
 
+Vous pouvez partir d'un template selon votre langage de prédilection:
+
+  * Scala
+    * https://git.esgi.nyuu.eu/nekonyuu/kafka-as-a-datahub-project-template-scala
+    * Akka HTTP, Kafka Streams
+  * Java
+    * https://git.esgi.nyuu.eu/nekonyuu/kafka-as-a-datahub-project-template-java
+    * Kafka Streams, REST framework à votre charge
+
 ## Questions
 
 ### Application de traitements sur des messages
