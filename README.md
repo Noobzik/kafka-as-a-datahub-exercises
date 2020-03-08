@@ -14,7 +14,6 @@
   * Consumers/Producers
     * Fonctionnement d'un producer
     * Fonctionnement d'un consumer
-      * fetch request, heartbeats, session, répartition de charge cliente
   * Réplication, durabilité et impact sur les performances
     * Performance - Disponibilité - Durabilité
         * Acquittement de messages
@@ -32,5 +31,4 @@
 ## Exercices
 
   * [Utilisation des clients Kafka officiels (Consumer/Producer)](exercices/01-consumer-producer.md)
-  * [Gestion des offsets](exercices/02-offsets.md)
-  * [Kafka Stream](exercices/03-kafka-streams.md)
+  * [Kafka Stream](exercices/02-kafka-streams.md)
