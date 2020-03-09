@@ -43,6 +43,10 @@ Vous pouvez partir d'un template selon votre langage de prédilection:
     * https://git.esgi.nyuu.eu/nekonyuu/kafka-as-a-datahub-project-template-java
     * Kafka Streams, REST framework à votre charge
 
+## Documentation
+
+  * Kafka Client Java API: https://docs.confluent.io/current/clients/java.html#java-client
+
 ## Questions
 
 ### Application de traitements sur des messages
