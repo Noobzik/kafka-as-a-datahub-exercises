@@ -1,5 +1,7 @@
+import asyncio
 import os
 import ssl
+import uuid
 
 import faust
 
@@ -25,12 +27,13 @@ metric_topic = app.topic("metrics", key_type=str, value_type=Metric)
 
 
 @app.timer(interval=0.05)
-async def visit_sender(app):
-    visit = generate_visit()
-    await visit_topic.send(key=str(visit._id), value=visit)
-
-
-@app.timer(interval=0.05)
-async def metric_sender(app):
-    metric = generate_metric()
-    await metric_topic.send(key=str(metric._id), value=metric)
+async def sender(app):
+    uuid_str = str(uuid.uuid4())
+    visit = Visit.generate(id=uuid_str)
+    metric = Metric.generate(id=uuid_str)
+    await asyncio.gather(
+        *[
+            visit_topic.send(key=str(visit._id), value=visit),
+            metric_topic.send(key=str(metric._id), value=metric),
+        ]
+    )

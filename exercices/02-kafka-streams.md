@@ -46,32 +46,30 @@ Ceci va lancer sur votre machine l'ensemble des composants nécessaires, allez e
 
 Pour l'usage de ce TP, vous vous connectez au broker Kafka suivant : `127.0.0.1:9092`
 
-## Application de traitements sur des messages
-
-Réimplémenter ce que vous avez fait dans le sujet précédent, section "Application de traitements sur des messages", en Kafka Streams :).
-
-Documentation Kafka Streams 
-  * https://docs.confluent.io/current/streams/developer-guide/dsl-api.html
+## Exercices
+### 1. Application de traitements sur des messages
 
 Tâches:
-  * Calculer la nombre de visites moyen par URL en temps réel :
-    * sur 30 secondes ;
-    * sur 1 minute ;
-    * sur 5 minutes.
+  * Calculer la nombre de visites moyen par URL :
+    * sur les 30 dernières secondes ;
+    * sur la dernière minute ;
+    * sur les 5 dernières minutes.
+
+Ces calculs doivent être implémentés sur des ["hopping window"](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#hopping-time-windows)
 
 _Attention: les messages arrivant dans les topics `visits` et `metrics` sont partitionnés par `id`, ce qui
-compliquera votre tâche. Pensez à repartitionner les messages vers un topic intermédiaire avec la bonne clé :)._
+compliquera votre tâche. Pensez à repartitionner les messages avec la bonne clé :)._
 
-## Opérations avancées
+### 2. Aggrégations avancées
 
   * Grouper par catégorie (seconde partie des URLs en `/store` ) et compter le nombre de visites par catégorie.
-  * Joindre les deux topics `visits` et `metrics` pour produire des évènements contenant les informations des deux topics
-    * Ecrire le résultat dans le topic `augmented-metrics`
-  * Calculer la latence moyenne par URL depuis le topic précédent, `augmented-metrics`.
+  * Joindre les deux topics `visits` et `metrics` pour produire des évènements contenant les informations des deux topics, puis calculer la latence moyenne par URL en partant de cette jointure.
 
-## Interactive Queries
+### 3. Interactive Queries
 
 Rendre disponible à l'instant T chacune de vos KTables sur une API REST (sous forme JSON).
 
-Tips: 
-  * https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html#streams-developer-guide-interactive-queries
+### Documentations
+
+  * Kafka Streams: https://docs.confluent.io/current/streams/developer-guide/dsl-api.html
+  * Interactive queries: https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html#streams-developer-guide-interactive-queries

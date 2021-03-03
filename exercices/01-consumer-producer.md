@@ -34,14 +34,7 @@ Ceci va lancer sur votre machine l'ensemble des composants nécessaires, allez e
 
 Pour l'usage de ce TP, vous vous connectez au broker Kafka suivant : `127.0.0.1:9092`
 
-Vous pouvez partir d'un template selon votre langage de prédilection:
-
-  * Scala
-    * https://git.esgi.nyuu.eu/nekonyuu/kafka-as-a-datahub-project-template-scala
-    * Akka HTTP, Kafka Streams
-  * Java
-    * https://git.esgi.nyuu.eu/nekonyuu/kafka-as-a-datahub-project-template-java
-    * Kafka Streams, REST framework à votre charge
+Vous pouvez partir d'un template Scala disponible ici: https://github.com/nekonyuu/kafka-as-a-datahub-project-template-scala.
 
 ## Documentation
 
@@ -52,12 +45,12 @@ Vous pouvez partir d'un template selon votre langage de prédilection:
 ### Application de traitements sur des messages
 
 Calculez le nombre de visites moyen pour chaque url, mis à jour en temps réel :
+  
+  * sur les 30 dernières secondes ;
+  * sur la dernière minute ;
+  * sur les 5 dernières minutes.
 
-  * sur les 30 dernières secondes, résultat à envoyer dans le topic `visits_30s` ;
-  * sur la dernière minute, résultat à envoyer dans le topic `visits_1mn` ;
-  * sur les 5 dernières minutes, résultat à envoyer dans le topic `visits_5mn`.
-
-**Les résultats sont à envoyer à chaque mise à jour dans les topics mentionnés.**
+Pour chacun de ces calculs, affichez régulièrement le résultat sur la sortie standard.
 
 ### Production de messages
 

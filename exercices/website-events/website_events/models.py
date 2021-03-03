@@ -1,7 +1,6 @@
 from datetime import datetime
 from faust import Record
 import random
-import uuid
 
 _RANDOM_URLS = [
     "/home",
@@ -34,11 +33,11 @@ class Visit(Record, coerce=True, serializer="json"):
     url: str
 
     @classmethod
-    def generate(cls):
+    def generate(cls, id: str):
         index = random.randint(0, len(_RANDOM_URLS) - 1)
         s_ip = f"{random.randint(0, 224)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(0, 255)}"
         return Visit(
-            _id=str(uuid.uuid4()),
+            _id=id,
             timestamp=datetime.now(),
             sourceIp=s_ip,
             url=_RANDOM_URLS[index],
@@ -51,9 +50,9 @@ class Metric(Record, coerce=True, serializer="json"):
     latency: int
 
     @classmethod
-    def generate(cls):
+    def generate(cls, id: str):
         return Metric(
-            _id=str(uuid.uuid4()),
+            _id=id,
             timestamp=datetime.now(),
             latency=random.randint(0, 600),
         )

@@ -29,6 +29,9 @@
 			"breadcrumb.activeSelectionForeground": "#00BCD4",
 			"menu.selectionForeground": "#00BCD4",
 			"menubar.selectionForeground": "#00BCD4"
+		},
+		"files.watcherExclude": {
+			"**/target": true
 		}
 	}
 }
