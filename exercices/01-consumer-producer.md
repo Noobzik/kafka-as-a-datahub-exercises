@@ -1,64 +1,41 @@
 # Implémentation d'un consumer & d'un producer
 
-## Contexte
-
-Vous venez d'arriver dans la société MediaSeller, site d'e-commerce vendant de multiples produits
-multimedia, des livres, appareils photo, etc.
-
-Vous prenez part à un workshop mis en place par l'équipe pour travailler sur les données
-produites par le site web de la société afin de pouvoir en sortir des tendances, ainsi que des 
-informations techniques utiles.
-
-Ces évènements de visite sont modélisés comme suit:
-
-```json
-{
-    "id": "5db37baf-06ed-4a9b-8e69-9b4f34ed959e",
-    "sourceIp": "42.42.183.75",
-    "url": "/store/tech/tv",
-    "timestamp": "2019-03-02T09:21:05.305622Z",
-}
-```
-
-Ils sont tous envoyés dans un topic kafka nommé `visits`.
-
 ## Environnement
 
-Vous devez démarrer localement les éléments nécessaire à cet exercice. Clonez ce dépôt Git, placez vous dans le dossier `platform/docker` puis faites la commande suivante:
+Vous allez utiliser un cluster Kafka préalablement déployé.
 
-```bash
-docker-compose up -d
-```
-
-Ceci va lancer sur votre machine l'ensemble des composants nécessaires, allez ensuite sur http://localhost:9021/ pour savoir l'état de votre cluster Kafka.
-
-Pour l'usage de ce TP, vous vous connectez au broker Kafka suivant : `127.0.0.1:9092`
-
-Vous pouvez partir d'un template Scala disponible ici: https://github.com/nekonyuu/kafka-as-a-datahub-project-template-scala.
+Les informations le concernant vous seront communiqués par Teams, elles seront à saisir dans le fichier `kafka.properties`.
 
 ## Documentation
 
   * Kafka Client Java API: https://docs.confluent.io/current/clients/java.html#java-client
 
-## Questions
+## Exercices
 
-### Application de traitements sur des messages
+Clonez le dépôt Git à [cette URL](https://github.com/nekonyuu/kafka-as-a-datahub-exercises-skeletons) et ouvrez le projet sous IntelliJ.
 
-Calculez le nombre de visites moyen pour chaque url, mis à jour en temps réel :
-  
-  * sur les 30 dernières secondes ;
-  * sur la dernière minute ;
-  * sur les 5 dernières minutes.
+### Production et consommation de messages
 
-Pour chacun de ces calculs, affichez régulièrement le résultat sur la sortie standard.
+Vous allez produire des évènements de connexion au cluster, lesquels contiendront un UUID, votre nom, prénom et un timestamp d'émission de l'évènement.
 
-### Production de messages
+La case class modélisant l'évènement à envoyer est déclarée comme suit (voir `ConnectionEvent.scala`) :
 
-Vous devez maintenant envoyer les messages que vous produisez avec une clé.
+```scala
+case class ConnectionEvent(
+                            _id: String,
+                            firstName: String,
+                            lastName: String,
+                            timestamp: OffsetDateTime
+                          )
+```
 
-L'idée est que vous puissiez garantir l'écriture des messages concernant la même URL dans la même partition.
+Vous devez écrire ces évènements dans un topic nommé `connection-events`, avec comme clé de message "votrePrénom-votreNom". Ensuite, consommez ce même topic pour voir vos messages ainsi que ceux des autres étudiants.
 
-Vous pouvez vérifier ceci dans la vue Topics du dashboard de votre cluster (http://localhost:9021 pour rappel).
+Pour cela, ouvrez le fichier `MessageProcessing.scala` et suivez les TODO :
+  * Ligne 24 pour la partie producer ;
+  * Ligne 46 pour la partie consumer.
+
+Une fois terminé, faites en sorte que le consumer n'affiche que les messages émis par vous (ceux contenant votre nom et prénom).
 
 ### Offsets
 
@@ -67,17 +44,14 @@ On souhaite avoir plus de contrôle sur les offsets commités par le consumer.
 En effet, le consumer commite automatiquement son offset toutes 
 les 5 secondes.
 
-Nous allons donc le désactiver: mettre la property `enable.auto.commit` à false.
+Nous allons donc le désactiver: dans le fichier `kafka.properties`, ajoutez la property `enable.auto.commit=false`, et commentez la ligne suivante dans la méthode `run()` :
 
-  1. Ne touchez à rien et lancez votre code plusieurs fois, que se passe-t-il ?
+```scala
+producerScheduler.schedule(producerLoop, 1, TimeUnit.SECONDS)
+```
+
+Maintenant:
+  1. Lancez votre code plusieurs fois, que se passe-t-il ?
   2. Committez l'offset après chaque consommation de message, et retentez la consommation plusieurs fois, que se passe-t-il ?
-  3. Donnez maintenant un `group_id` à votre consommateur, et retentez encore une fois l'opération. Que se passe-t-il ?
+  3. Changez maintenant le contenu de la variable `applicationName` en y ajoutant un nombre, par exemple. Ceci a pour effet de donner un `group_id` différent à votre consommateur. Relancez une nouvelle fois l'application. Que se passe-t-il ?
   4. Conservez ce nom, et trouvez un moyen de revenir au début des partitions :).
-
-### Acquittement
-
-Nous voudrions maintenant + de garanties sur l'écriture des messages, de manière à n'en perdre aucun.
-
-Pour tous les appels de production de messages, faites en sorte que
-le paramètre d'acquittement soit maintenant `acks=all`, s'assurant de 
-l'écriture des messages sur tous les brokers.

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Kafka Streams</title>
+        <style>
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="kafka-streams">Kafka Streams</h1>
+<h2 id="contexte">Contexte</h2>
+<p>Vous venez d'arriver dans la société MediaSeller, site d'e-commerce vendant de multiples produits
+multimedia, des livres, appareils photo, etc.</p>
+<p>Vous prenez part à un workshop mis en place par l'équipe pour travailler sur les données
+produites par le site web de la société afin de pouvoir en sortir des tendances, ainsi que des
+informations techniques utiles.</p>
+<p>Ces évènements de visite sont modélisés comme suit:</p>
+<pre><code class="language-json"><div>{
+    <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;5db37baf-06ed-4a9b-8e69-9b4f34ed959e&quot;</span>,
+    <span class="hljs-attr">&quot;sourceIp&quot;</span>: <span class="hljs-string">&quot;42.42.183.75&quot;</span>,
+    <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;/store/tech/tv&quot;</span>,
+    <span class="hljs-attr">&quot;timestamp&quot;</span>: <span class="hljs-string">&quot;2019-03-02T09:21:05.305622Z&quot;</span>,
+}
+</div></code></pre>
+<p>Ils sont tous envoyés dans un topic kafka nommé <code>visits</code>.</p>
+<p>Nous allons aussi utiliser un second topic kafka, <code>metrics</code>, contenant les informations suivantes :</p>
+<pre><code class="language-json"><div>{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;5db37baf-06ed-4a9b-8e69-9b4f34ed959e&quot;</span>,
+  <span class="hljs-attr">&quot;timestamp&quot;</span>: <span class="hljs-string">&quot;2019-03-02T12:03:36.495084Z&quot;</span>,
+  <span class="hljs-attr">&quot;latency&quot;</span>: <span class="hljs-number">553</span>
+}
+</div></code></pre>
+<p>L'ID donné dans ce message correspond à l'ID d'event de visite dans le topic <code>visits</code>.</p>
+<h2 id="environnement">Environnement</h2>
+<p>Vous allez utiliser un cluster Kafka préalablement déployé.</p>
+<p>Les informations le concernant vous seront communiqués par Teams, elles seront à saisir dans le fichier <code>kafka.properties</code>.</p>
+<h2 id="exercices">Exercices</h2>
+<p>Clonez le dépôt Git à <a href="https://github.com/nekonyuu/kafka-as-a-datahub-exercises-skeletons">cette URL</a> et ouvrez le projet sous IntelliJ.</p>
+<p>Les fichiers <code>StreamProcessing.scala</code> et <code>WebServer.scala</code> contiennent l'ensemble du code à manipuler pour ces exercices,
+ponctués de TODOs au fil de ceux-ci.</p>
+<h3 id="1-application-de-traitements-sur-des-messages">1. Application de traitements sur des messages</h3>
+<p>Vous devez calculer la nombre de visites par URL :</p>
+<ul>
+<li>sur les 30 dernières secondes ;</li>
+<li>sur la dernière minute ;</li>
+<li>sur les 5 dernières minutes.</li>
+</ul>
+<p>Ces calculs doivent être implémentés sur des <a href="https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#hopping-time-windows">&quot;hopping window&quot;</a></p>
+<p>Pour implémenter cela, allez dans le fichier <code>StreamProcessing.scala</code> et commencez ligne 40.</p>
+<p><em>Attention: les messages arrivant dans les topics <code>visits</code> et <code>metrics</code> sont partitionnés par <code>id</code>, ce qui
+compliquera votre tâche. Pensez à repartitionner les messages avec la bonne clé :).</em></p>
+<h3 id="2-aggrégations-avancées">2. Aggrégations avancées</h3>
+<ul>
+<li>Grouper par catégorie (seconde partie des URLs en <code>/store</code> ) et compter le nombre de visites par catégorie
+<ul>
+<li>sur les 30 dernières secondes ;</li>
+<li>sur la dernière minute ;</li>
+<li>sur les 5 dernières minutes.</li>
+</ul>
+</li>
+<li>Joindre les deux topics <code>visits</code> et <code>metrics</code> pour produire des évènements contenant les informations des deux topics, puis calculer la latence moyenne par URL en partant de cette jointure.</li>
+</ul>
+<h3 id="3-interactive-queries">3. Interactive Queries</h3>
+<p>Rendez disponible le résultat de chacune de vos KTables sur une API REST (sous forme JSON), actualisé au fil de l'eau.</p>
+<p>Pour cela, vous devez :</p>
+<ul>
+<li>Matérialiser les KTables que vous avez construit dans des stores, dans le fichier <code>StreamProcessing.scala</code></li>
+<li>requêter ces nouveaux stores dans l'API REST implémentée avec Akka HTTP dans le fichier <code>WebServer.scala</code>, suivez les TODO pour l'implémentation.</li>
+</ul>
+<h3 id="documentations">Documentations</h3>
+<ul>
+<li>Kafka Streams: <a href="https://docs.confluent.io/current/streams/developer-guide/dsl-api.html">https://docs.confluent.io/current/streams/developer-guide/dsl-api.html</a></li>
+<li>Interactive queries: <a href="https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html#streams-developer-guide-interactive-queries">https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html#streams-developer-guide-interactive-queries</a></li>
+</ul>
+
+    </body>
+    </html>

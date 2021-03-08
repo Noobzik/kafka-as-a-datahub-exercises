@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Impl&eacute;mentation d&apos;un consumer &amp; d&apos;un producer</title>
+        <style>
+</style>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item { list-style-type: none; } .task-list-item-checkbox { margin-left: -20px; vertical-align: middle; }
+</style>
+        
+        
+        
+    </head>
+    <body class="vscode-body vscode-light">
+        <h1 id="implémentation-dun-consumer--dun-producer">Implémentation d'un consumer &amp; d'un producer</h1>
+<h2 id="environnement">Environnement</h2>
+<p>Vous allez utiliser un cluster Kafka préalablement déployé.</p>
+<p>Les informations le concernant vous seront communiqués par Teams, elles seront à saisir dans le fichier <code>kafka.properties</code>.</p>
+<h2 id="documentation">Documentation</h2>
+<ul>
+<li>Kafka Client Java API: <a href="https://docs.confluent.io/current/clients/java.html#java-client">https://docs.confluent.io/current/clients/java.html#java-client</a></li>
+</ul>
+<h2 id="exercices">Exercices</h2>
+<p>Clonez le dépôt Git à <a href="https://github.com/nekonyuu/kafka-as-a-datahub-exercises-skeletons">cette URL</a> et ouvrez le projet sous IntelliJ.</p>
+<h3 id="production-et-consommation-de-messages">Production et consommation de messages</h3>
+<p>Vous allez produire des évènements de connexion au cluster, lesquels contiendront un UUID, votre nom, prénom et un timestamp d'émission de l'évènement.</p>
+<p>La case class modélisant l'évènement à envoyer est déclarée comme suit (voir <code>ConnectionEvent.scala</code>) :</p>
+<pre><code class="language-scala"><div><span class="hljs-keyword">case</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConnectionEvent</span>(<span class="hljs-params">
+                            _id: <span class="hljs-type">String</span>,
+                            firstName: <span class="hljs-type">String</span>,
+                            lastName: <span class="hljs-type">String</span>,
+                            timestamp: <span class="hljs-type">OffsetDateTime</span>
+                          </span>)</span>
+</div></code></pre>
+<p>Vous devez écrire ces évènements dans un topic nommé <code>connection-events</code>, avec comme clé de message &quot;votrePrénom-votreNom&quot;. Ensuite, consommez ce même topic pour voir vos messages ainsi que ceux des autres étudiants.</p>
+<p>Pour cela, ouvrez le fichier <code>MessageProcessing.scala</code> et suivez les TODO :</p>
+<ul>
+<li>Ligne 24 pour la partie producer ;</li>
+<li>Ligne 46 pour la partie consumer.</li>
+</ul>
+<p>Une fois terminé, faites en sorte que le consumer n'affiche que les messages émis par vous (ceux contenant votre nom et prénom).</p>
+<h3 id="offsets">Offsets</h3>
+<p>On souhaite avoir plus de contrôle sur les offsets commités par le consumer.</p>
+<p>En effet, le consumer commite automatiquement son offset toutes
+les 5 secondes.</p>
+<p>Nous allons donc le désactiver: dans le fichier <code>kafka.properties</code>, ajoutez la property <code>enable.auto.commit=false</code>, et commentez la ligne suivante dans la méthode <code>run()</code> :</p>
+<pre><code class="language-scala"><div>producerScheduler.schedule(producerLoop, <span class="hljs-number">1</span>, <span class="hljs-type">TimeUnit</span>.<span class="hljs-type">SECONDS</span>)
+</div></code></pre>
+<p>Maintenant:</p>
+<ol>
+<li>Lancez votre code plusieurs fois, que se passe-t-il ?</li>
+<li>Committez l'offset après chaque consommation de message, et retentez la consommation plusieurs fois, que se passe-t-il ?</li>
+<li>Changez maintenant le contenu de la variable <code>applicationName</code> en y ajoutant un nombre, par exemple. Ceci a pour effet de donner un <code>group_id</code> différent à votre consommateur. Relancez une nouvelle fois l'application. Que se passe-t-il ?</li>
+<li>Conservez ce nom, et trouvez un moyen de revenir au début des partitions :).</li>
+</ol>
+
+    </body>
+    </html>

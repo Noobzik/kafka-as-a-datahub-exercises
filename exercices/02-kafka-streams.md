@@ -36,38 +36,46 @@ L'ID donné dans ce message correspond à l'ID d'event de visite dans le topic `
 
 ## Environnement
 
-Vous devez démarrer localement les éléments nécessaire à cet exercice. Clonez ce dépôt Git, placez vous dans le dossier `platform/docker` puis faites la commande suivante:
+Vous allez utiliser un cluster Kafka préalablement déployé.
 
-```bash
-docker-compose up -d
-```
-
-Ceci va lancer sur votre machine l'ensemble des composants nécessaires, allez ensuite sur http://localhost:9021/ pour savoir l'état de votre cluster Kafka.
-
-Pour l'usage de ce TP, vous vous connectez au broker Kafka suivant : `127.0.0.1:9092`
+Les informations le concernant vous seront communiqués par Teams, elles seront à saisir dans le fichier `kafka.properties`.
 
 ## Exercices
+
+Clonez le dépôt Git à [cette URL](https://github.com/nekonyuu/kafka-as-a-datahub-exercises-skeletons) et ouvrez le projet sous IntelliJ.
+
+Les fichiers `StreamProcessing.scala` et `WebServer.scala` contiennent l'ensemble du code à manipuler pour ces exercices, 
+ponctués de TODOs au fil de ceux-ci.
+
 ### 1. Application de traitements sur des messages
 
-Tâches:
-  * Calculer la nombre de visites moyen par URL :
-    * sur les 30 dernières secondes ;
-    * sur la dernière minute ;
-    * sur les 5 dernières minutes.
+Vous devez calculer la nombre de visites par URL :
+  * sur les 30 dernières secondes ;
+  * sur la dernière minute ;
+  * sur les 5 dernières minutes.
 
 Ces calculs doivent être implémentés sur des ["hopping window"](https://docs.confluent.io/platform/current/streams/developer-guide/dsl-api.html#hopping-time-windows)
+
+Pour implémenter cela, allez dans le fichier `StreamProcessing.scala` et commencez ligne 40.
 
 _Attention: les messages arrivant dans les topics `visits` et `metrics` sont partitionnés par `id`, ce qui
 compliquera votre tâche. Pensez à repartitionner les messages avec la bonne clé :)._
 
 ### 2. Aggrégations avancées
 
-  * Grouper par catégorie (seconde partie des URLs en `/store` ) et compter le nombre de visites par catégorie.
+  * Grouper par catégorie (seconde partie des URLs en `/store` ) et compter le nombre de visites par catégorie
+    * sur les 30 dernières secondes ;
+    * sur la dernière minute ;
+    * sur les 5 dernières minutes.
   * Joindre les deux topics `visits` et `metrics` pour produire des évènements contenant les informations des deux topics, puis calculer la latence moyenne par URL en partant de cette jointure.
 
 ### 3. Interactive Queries
 
-Rendre disponible à l'instant T chacune de vos KTables sur une API REST (sous forme JSON).
+Rendez disponible le résultat de chacune de vos KTables sur une API REST (sous forme JSON), actualisé au fil de l'eau. 
+
+Pour cela, vous devez :
+  * Matérialiser les KTables que vous avez construit dans des stores, dans le fichier `StreamProcessing.scala`
+  * requêter ces nouveaux stores dans l'API REST implémentée avec Akka HTTP dans le fichier `WebServer.scala`, suivez les TODO pour l'implémentation.
 
 ### Documentations
 
