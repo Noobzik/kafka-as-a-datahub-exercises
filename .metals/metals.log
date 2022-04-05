@@ -199,3 +199,5 @@ object VisitCount {
 }
 
 [0m2021.02.25 00:21:57 INFO  shutting down Metals[0m
+2022.04.05 22:59:57 INFO  tracing is disabled for protocol LSP, to enable tracing of incoming and outgoing JSON messages create an empty file at c:\Users\nekon\develop\courses\kafka-as-a-datahub\kafka-as-a-datahub-exercices\.metals\lsp.trace.json or c:\Users\nekon\develop\courses\kafka-as-a-datahub\kafka-as-a-datahub-exercices\null\scalameta\metals\cache\lsp.trace.json
+2022.04.05 22:59:58 INFO  logging to file C:\Users\nekon\develop\courses\kafka-as-a-datahub\kafka-as-a-datahub-exercices\.metals\metals.log
